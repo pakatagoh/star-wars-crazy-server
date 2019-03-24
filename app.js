@@ -16,7 +16,6 @@ if (isDev) {
 
 const corsOptions = {
   origin: function(origin, callback) {
-    console.log('the origin: ', origin);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {

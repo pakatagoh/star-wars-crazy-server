@@ -33,7 +33,7 @@ const tmdbApiGetMovie = async imdbId => {
       imageSrc: `https://image.tmdb.org/t/p/w342${poster_path}`,
     };
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 };
 
