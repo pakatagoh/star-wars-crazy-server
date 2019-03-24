@@ -8,7 +8,7 @@ const movies = require('./routes/movies');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-const whitelist = ['https://api-starwarscrazy.herokuapp.com'];
+const whitelist = ['https://starwarscrazy.netlify.com'];
 
 isDev && whitelist.push('http://localhost:3000');
 
