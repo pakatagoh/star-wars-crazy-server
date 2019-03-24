@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config();
 
 const tmdbMovieFindApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3/find',
