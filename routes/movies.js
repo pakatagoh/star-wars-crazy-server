@@ -4,7 +4,7 @@ const router = express.Router();
 
 module.exports = router;
 
-router.route('/:id').get(async (req, res) => {
+router.route('/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params;
     const foundMovie = await tmdbApiGetMovie(id);
@@ -13,6 +13,6 @@ router.route('/:id').get(async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: 'something went wrong' });
+    return next(error);
   }
 });

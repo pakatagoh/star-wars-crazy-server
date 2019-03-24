@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 const movies = require('./routes/movies');
-
+const errorMiddleware = require('./middleware/error');
 const isDev = process.env.NODE_ENV !== 'production';
 
 const whitelist = ['https://starwarscrazy.netlify.com', 'https://api-starwarscrazy.herokuapp.com'];
@@ -39,5 +39,7 @@ app.use('*', (req, res) => {
     error: 'Not Found',
   });
 });
+
+app.use(errorMiddleware);
 
 module.exports = app;
