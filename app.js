@@ -10,7 +10,9 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const whitelist = ['https://starwarscrazy.netlify.com', 'https://api-starwarscrazy.herokuapp.com'];
 
-isDev && whitelist.push('http://localhost:3000');
+if (isDev) {
+  whitelist.push('http://localhost:3000');
+}
 
 const corsOptions = {
   origin: function(origin, callback) {
