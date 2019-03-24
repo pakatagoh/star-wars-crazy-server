@@ -4,15 +4,15 @@ const router = express.Router();
 
 module.exports = router;
 
-router.route('/').get(async (req, res) => {
+router.route('/:id').get(async (req, res) => {
   try {
-    const { imdbId } = req.body;
-    const foundMovie = await tmdbApiGetMovie(imdbId);
+    const { id } = req.params;
+    const foundMovie = await tmdbApiGetMovie(id);
     if (foundMovie) {
       return res.status(200).json(foundMovie);
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: 'something went wrong' });
+    return res.status(400).json({ error: 'something went wrong' });
   }
 });

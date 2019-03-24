@@ -19,6 +19,7 @@ const tmdbApiGetMovie = async imdbId => {
       `/${imdbId}?api_key=${process.env.TMDB_API_KEY}&external_source=imdb_id`
     );
     const foundMovie = movieFindResponse.data.movie_results[0];
+    if (!foundMovie) return {};
     const { id: movie_id, overview, poster_path, release_date, title, vote_average } = foundMovie;
     const creditsResponse = await tmdbMovieCreditsApi(movie_id);
     const { cast } = creditsResponse.data;
