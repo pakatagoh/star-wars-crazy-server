@@ -6,6 +6,7 @@ const app = express();
 
 const movies = require('./routes/movies');
 const errorMiddleware = require('./middleware/error');
+
 const isDev = process.env.NODE_ENV !== 'production';
 
 const whitelist = ['https://starwarscrazy.netlify.com', 'https://api-starwarscrazy.herokuapp.com'];
@@ -15,7 +16,7 @@ if (isDev) {
 }
 
 const corsOptions = {
-  origin: function(origin, callback) {
+  origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -25,7 +26,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-1;
 app.use(morgan(isDev ? 'dev' : 'tiny'));
 app.use(express.json());
 app.use('/v1/movies', movies);

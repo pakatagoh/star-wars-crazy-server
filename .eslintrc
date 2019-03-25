@@ -16,7 +16,7 @@
     "consistent-return": 0,
     "func-names": 0,
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-    "camelcase":  ["always",
+    "camelcase":  ["warn",
       {"ignoreDestructuring": true
     }],
     "prettier/prettier": [
