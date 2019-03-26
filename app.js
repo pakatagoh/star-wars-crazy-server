@@ -1,10 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 const movies = require('./routes/movies');
+const auth = require('./routes/auth');
 const errorMiddleware = require('./middleware/error');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -23,12 +25,15 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(morgan(isDev ? 'dev' : 'tiny'));
 app.use(express.json());
+app.use(cookieParser());
 app.use('/v1/movies', movies);
+app.use('/v1/auth', auth);
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello world');
