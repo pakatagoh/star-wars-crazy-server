@@ -16,7 +16,7 @@ afterAll(async () => {
 });
 
 describe('Auth routes test', () => {
-  test('should create new user', done => {
+  test('should create new user on signup', done => {
     const route = '/v1/auth/signup';
     request(app)
       .post(route)
