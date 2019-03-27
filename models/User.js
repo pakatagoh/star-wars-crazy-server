@@ -52,5 +52,9 @@ module.exports = (sequelize, SEQUELIZE) => {
     { timestamps: true }
   );
 
+  User.associate = models => {
+    User.hasOne(models.Score);
+  };
+
   return User;
 };

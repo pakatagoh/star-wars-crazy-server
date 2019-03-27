@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { User, Score } = require('../models');
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const secret = 'the-secret-key';
 
 router.route('/signup').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } });
+    const existingUser = await User.findOne({ where: { email: req.body.email } }, { include: [Score] });
     if (existingUser) {
       return res.status(400).json({ error: { message: 'User already exists' } });
     }
@@ -22,8 +22,10 @@ router.route('/signup').post(async (req, res, next) => {
       firstName: newUser.firstName,
       lastName: newUser.lastName ? newUser.lastName : '',
       imageUrl: newUser.imageUrl,
+      score: null,
     });
   } catch (error) {
+    console.error(error);
     if (error.name === 'SequelizeValidationError') {
       return res.status(400).json({ error: { name: 'SequelizeValidationError', errors: error.errors } });
     }
@@ -31,19 +33,19 @@ router.route('/signup').post(async (req, res, next) => {
   }
 });
 
-router.route('/logout').post((req, res, next) => {
+router.route('/logout').post((req, res) => {
   res.clearCookie('token', { httpOnly: true, secure: !isDev });
   res.status(200).json({ message: 'all good' });
 });
 
 router.route('/login').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } });
-
+    const existingUser = await User.findOne({ where: { email: req.body.email } }, { include: [Score] });
     if (!existingUser) {
       return res.status(400).json({ error: { message: 'User does not exist, please signup' } });
     }
 
+    const score = await existingUser.getScore();
     const token = await jwt.sign({ id: existingUser.id }, secret);
     res.cookie('token', token, { httpOnly: true, secure: !isDev });
     return res.status(201).json({
@@ -51,8 +53,10 @@ router.route('/login').post(async (req, res, next) => {
       firstName: existingUser.firstName,
       lastName: existingUser.lastName ? existingUser.lastName : '',
       imageUrl: existingUser.imageUrl,
+      score: score ? score.value : null,
     });
   } catch (error) {
+    console.error(error);
     return next(error);
   }
 });

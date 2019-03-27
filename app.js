@@ -7,6 +7,7 @@ const app = express();
 
 const movies = require('./routes/movies');
 const auth = require('./routes/auth');
+const scores = require('./routes/scores');
 const errorMiddleware = require('./middleware/error');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/v1/movies', movies);
 app.use('/v1/auth', auth);
+app.use('/v1/scores', scores);
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello world');

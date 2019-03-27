@@ -13,6 +13,7 @@ if (env === 'production') {
 
 const models = {
   User: sequelize.import('./User.js'),
+  Score: sequelize.import('./Score.js'),
 };
 
 Object.keys(models).forEach(key => {

@@ -4,11 +4,8 @@ const { sequelize } = require('../models');
 const createUsers = require('../seed');
 
 beforeAll(async () => {
-  const port = 3333;
   await sequelize.sync({ force: true });
   await createUsers();
-  await app.listen(port);
-  console.log(`Test server is running on http://localhost:${port}`);
 });
 
 afterAll(async () => {
