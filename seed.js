@@ -9,7 +9,7 @@ const createUsers = async () => {
       password: 'password',
       imageUrl: 'https://avatars1.githubusercontent.com/u/37908805?s=460&v=4',
       score: {
-        value: 5,
+        value: 0,
       },
     },
     { include: [Score] }

@@ -19,14 +19,17 @@ router.route('/').post(async (req, res, next) => {
 
     const existingScore = await foundUser.getScore();
 
-    if (existingScore >= score) {
+    if (!existingScore) {
+      const createdScore = await Score.create({ value: score, userId: foundUser.id });
+      return res.status(202).json({ score: createdScore.value });
+    }
+
+    if (existingScore.value >= score) {
       return res.status(202).json({ score: existingScore });
     }
 
-    const updatedUser = await foundUser.setScore(score);
-    if (!updatedUser) {
-      return next(new Error('Something went wrong when updating score'));
-    }
+    const foundScore = await Score.findOne({ where: { userId: foundUser.id } });
+    const updatedScore = await foundScore.update({ value: score });
 
     return res.status(202).json({ score });
   } catch (error) {
