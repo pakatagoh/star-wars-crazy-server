@@ -6,6 +6,31 @@ const router = express.Router();
 
 const secret = 'the-secret-key';
 
+router.route('/').get(async (req, res, next) => {
+  try {
+    const foundScores = await Score.findAll({
+      limit: 5,
+      order: [['value', 'DESC'], [User, 'firstName', 'ASC']],
+      include: [User],
+    });
+
+    const finalUsers = foundScores.map(score => {
+      return {
+        score: score.value,
+        firstName: score.user.firstName,
+        lastName: score.user.lastName,
+        email: score.user.email,
+        imageUrl: score.user.imageUrl,
+      };
+    });
+
+    return res.status(200).json(finalUsers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.route('/').post(async (req, res, next) => {
   try {
     const { token } = req.cookies;
@@ -25,7 +50,7 @@ router.route('/').post(async (req, res, next) => {
     }
 
     if (existingScore.value >= score) {
-      return res.status(202).json({ score: existingScore });
+      return res.status(202).json({ score: existingScore.value });
     }
 
     const foundScore = await Score.findOne({ where: { userId: foundUser.id } });
