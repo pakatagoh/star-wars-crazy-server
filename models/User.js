@@ -54,6 +54,7 @@ module.exports = (sequelize, SEQUELIZE) => {
 
   User.associate = models => {
     User.hasOne(models.Score);
+    User.hasOne(models.Attendee);
   };
 
   return User;

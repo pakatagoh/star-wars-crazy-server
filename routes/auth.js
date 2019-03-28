@@ -40,7 +40,7 @@ router.route('/logout').post((req, res) => {
 
 router.route('/login').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } }, { include: [Score] });
+    const existingUser = await User.findOne({ where: { email: req.body.email } });
     if (!existingUser) {
       return res.status(400).json({ error: { message: 'User does not exist, please signup' } });
     }
