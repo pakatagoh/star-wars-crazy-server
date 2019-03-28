@@ -3,7 +3,7 @@ const app = require('../app');
 const { sequelize } = require('../models');
 const createUsers = require('../seed');
 
-beforeAll(async () => {
+beforeEach(async () => {
   await sequelize.sync({ force: true });
   await createUsers();
 });
@@ -19,8 +19,8 @@ describe('Auth routes test', () => {
       .post(route)
       .set('Origin', 'http://localhost:3000')
       .send({
-        firstName: 'nicole',
-        email: 'nicole@gmail.com',
+        firstName: 'test',
+        email: 'test@gmail.com',
         password: '12345',
         imageUrl: 'https://randomuser.me/api/portraits/men/29.jpg',
       })
@@ -30,7 +30,7 @@ describe('Auth routes test', () => {
         expect(user).toEqual(
           expect.objectContaining({
             id: expect.any(Number),
-            firstName: 'nicole',
+            firstName: 'test',
             lastName: '',
             imageUrl: 'https://randomuser.me/api/portraits/men/29.jpg',
           })
