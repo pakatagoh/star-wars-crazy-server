@@ -20,8 +20,8 @@ module.exports = (sequelize, SEQUELIZE) => {
       email: {
         type: SEQUELIZE.STRING,
         unique: {
+          args: true,
           msg: 'This email is already taken',
-          fields: ['email'],
         },
         validate: {
           isEmail: true,

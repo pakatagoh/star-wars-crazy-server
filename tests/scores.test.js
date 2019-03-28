@@ -31,7 +31,7 @@ describe('Scores route', () => {
   });
 
   test('[POST] should return same score if existing score is greater or equal to received score', async done => {
-    const foundUser = await User.findOne({ where: { firstName: 'sabrina' } });
+    const foundUser = await User.findOne({ where: { firstName: 'huitian' } });
     jwt.verify.mockResolvedValueOnce({ id: foundUser.id });
 
     const route = '/v1/scores';
@@ -40,40 +40,28 @@ describe('Scores route', () => {
       .set('Origin', 'http://localhost:3000')
       .set('Cookie', 'token=12345')
       .send({ score: 1 })
-      .expect(202, { score: 8 }, done);
+      .expect(202, { score: 2 }, done);
   });
 
   test('[GET] should return an list of maximum 5 users with descending scores', async done => {
     const expected = [
       {
-        firstName: 'nipun',
-        email: 'nipun@gmail.com',
-        imageUrl: 'https://randomuser.me/api/portraits/men/8.jpg',
-        score: 11,
+        firstName: 'huitian',
+        email: 'huitian@gmail.com',
+        imageUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
+        score: 2,
       },
       {
         firstName: 'jerome',
         email: 'jerom@gmail.com',
         imageUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
-        score: 9,
+        score: 2,
       },
       {
         firstName: 'yingqi',
         email: 'yingqi@gmail.com',
         imageUrl: 'https://randomuser.me/api/portraits/women/50.jpg',
-        score: 9,
-      },
-      {
-        firstName: 'sabrina',
-        email: 'sabrina@gmail.com',
-        imageUrl: 'https://randomuser.me/api/portraits/women/31.jpg',
-        score: 8,
-      },
-      {
-        firstName: 'nicholas',
-        email: 'nicholas@gmail.com',
-        imageUrl: 'https://randomuser.me/api/portraits/men/10.jpg',
-        score: 7,
+        score: 1,
       },
     ];
 

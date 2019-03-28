@@ -34,6 +34,7 @@ router.route('/').get(async (req, res, next) => {
 router.route('/').post(async (req, res, next) => {
   try {
     const { token } = req.cookies;
+    if (!token) return res.status(400).json({ error: { message: 'Please login' } });
     const { score } = req.body;
     const user = await jwt.verify(token, secret);
     const foundUser = await User.findOne({ where: { id: user.id } });
@@ -55,7 +56,7 @@ router.route('/').post(async (req, res, next) => {
 
     const foundScore = await Score.findOne({ where: { userId: foundUser.id } });
     const updatedScore = await foundScore.update({ value: score });
-
+    console.log('THE UPDATED SCORE: ', updatedScore);
     return res.status(202).json({ score });
   } catch (error) {
     console.error(error);
