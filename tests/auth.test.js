@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const { sequelize } = require('../models');
-const createUsers = require('../seed');
+const { createUsers } = require('../seed');
 
 beforeEach(async () => {
   await sequelize.sync({ force: true });

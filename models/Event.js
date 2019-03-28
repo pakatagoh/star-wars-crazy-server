@@ -17,6 +17,16 @@ module.exports = (sequelize, SEQUELIZE) => {
           },
         },
       },
+      slug: {
+        type: SEQUELIZE.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          notNull: {
+            msg: 'Slug must be specified',
+          },
+        },
+      },
       description: {
         type: SEQUELIZE.STRING,
         allowNull: false,
@@ -44,15 +54,6 @@ module.exports = (sequelize, SEQUELIZE) => {
           },
         },
       },
-      password: {
-        type: SEQUELIZE.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Please enter password',
-          },
-        },
-      },
       imageUrl: {
         type: SEQUELIZE.STRING,
         allowNull: true,
@@ -76,8 +77,12 @@ module.exports = (sequelize, SEQUELIZE) => {
   );
 
   Event.associate = models => {
-    Event.belongsTo(models.User);
-    Event.belongsToMany(models.Attendee, { through: 'event_attendee' });
+    Event.belongsTo(models.User, { as: 'organizer', foreignKey: 'organizerId' });
+    Event.belongsToMany(models.User, {
+      as: 'attendees',
+      through: 'event_attendee',
+      foreignKey: 'eventId',
+    });
   };
 
   return Event;

@@ -1,4 +1,4 @@
-const { User, Score } = require('./models');
+const { User, Score, Event } = require('./models');
 
 const createUsers = async () => {
   await User.create({
@@ -79,4 +79,37 @@ const createUsers = async () => {
   });
 };
 
-module.exports = createUsers;
+const createEvents = async () => {
+  const user1 = await User.create({
+    firstName: 'jesstern',
+    email: 'jesstern@gmail.com',
+    password: 'password',
+    imageUrl: 'https://randomuser.me/api/portraits/women/51.jpg',
+  });
+  const user2 = await User.create({
+    firstName: 'angeline',
+    email: 'angeline@gmail.com',
+    password: 'password',
+    imageUrl: 'https://randomuser.me/api/portraits/women/51.jpg',
+  });
+  const event1 = await Event.create(
+    {
+      name: 'Event 1 name',
+      slug: 'event-1-name',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 1,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      capacity: 10,
+    },
+    { include: [{ association: User.Organizer, as: 'organizer' }] }
+  );
+
+  await event1.setAttendees([user1.id, user2.id]);
+  // const foundEvent = await Event.findOne({ where: { name: 'Event 1 name' }, include: [{ all: true }] });
+};
+
+module.exports = { createUsers, createEvents };

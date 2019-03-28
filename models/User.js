@@ -54,7 +54,12 @@ module.exports = (sequelize, SEQUELIZE) => {
 
   User.associate = models => {
     User.hasOne(models.Score);
-    User.hasOne(models.Attendee);
+    User.Organizer = User.hasOne(models.Event, { foreignKey: 'organizerId', sourceKey: 'id' });
+    User.Attendees = User.belongsToMany(models.Event, {
+      as: 'events',
+      through: 'event_attendee',
+      foreignKey: 'userId',
+    });
   };
 
   return User;

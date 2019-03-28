@@ -1,6 +1,6 @@
 const app = require('./app');
 const { sequelize } = require('./models');
-const createUsers = require('./seed');
+const { createUsers, createEvents } = require('./seed');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
@@ -10,6 +10,7 @@ const eraseDatabaseOnSync = true;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
   if (eraseDatabaseOnSync) {
     createUsers();
+    createEvents();
   }
   app.listen(PORT, () => {
     if (!isDev) {

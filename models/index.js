@@ -15,7 +15,7 @@ const models = {
   User: sequelize.import('./User.js'),
   Score: sequelize.import('./Score.js'),
   Event: sequelize.import('./Event.js'),
-  Attendee: sequelize.import('./Attendee.js'),
+  // Attendee: sequelize.import('./Attendee.js'),
 };
 
 Object.keys(models).forEach(key => {
