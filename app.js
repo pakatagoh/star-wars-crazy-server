@@ -34,6 +34,7 @@ app.use(cors(corsOptions));
 app.use(morgan(isDev ? 'dev' : 'tiny'));
 app.use(express.json());
 app.use(cookieParser());
+
 app.use('/v1/movies', movies);
 app.use('/v1/auth', auth);
 app.use('/v1/scores', scores);

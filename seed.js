@@ -29,12 +29,15 @@ const createUsers = async () => {
     password: 'password',
     imageUrl: 'https://randomuser.me/api/portraits/men/10.jpg',
   });
-  await User.create({
-    firstName: 'timothy',
-    email: 'timothy@gmail.com',
-    password: 'password',
-    imageUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
-  });
+  const createdEvent = await User.create(
+    {
+      firstName: 'timothy',
+      email: 'timothy@gmail.com',
+      password: 'password',
+      imageUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
+    },
+    { include: [Score] }
+  );
   await User.create(
     {
       firstName: 'huitian',
@@ -43,8 +46,9 @@ const createUsers = async () => {
       imageUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
       score: { value: 2 },
     },
-    { include: [Score] }
+    { include: [Score, Event] }
   );
+  console.log(createdEvent);
   await User.create(
     {
       firstName: 'jerome',
@@ -103,7 +107,7 @@ const createEvents = async () => {
       organizerId: 1,
       imageUrl:
         'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
-      capacity: 10,
+      capacity: 3,
     },
     { include: [{ association: User.Organizer, as: 'organizer' }] }
   );

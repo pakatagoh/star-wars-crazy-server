@@ -4,6 +4,7 @@ module.exports = {
     password: 'password',
     database: 'star-wars-api-dev',
     options: {
+      logging: false,
       dialect: 'postgres',
     },
   },

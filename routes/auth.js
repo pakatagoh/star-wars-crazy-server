@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { User, Score } = require('../models');
+const { User, Score, Event } = require('../models');
 
 const router = express.Router();
 
@@ -9,12 +9,13 @@ const secret = 'the-secret-key';
 
 router.route('/signup').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } }, { include: [Score] });
+    const existingUser = await User.findOne({ where: { email: req.body.email } });
     if (existingUser) {
       return res.status(400).json({ error: { message: 'User already exists' } });
     }
 
-    const newUser = await User.create(req.body);
+    const newUser = await User.create(req.body, { include: [Score, { model: Event, as: 'events' }] });
+
     const token = await jwt.sign({ id: newUser.id }, secret);
     res.cookie('token', token, { httpOnly: true, secure: !isDev });
     return res.status(201).json({
@@ -23,6 +24,7 @@ router.route('/signup').post(async (req, res, next) => {
       lastName: newUser.lastName ? newUser.lastName : '',
       imageUrl: newUser.imageUrl,
       score: null,
+      events: [],
     });
   } catch (error) {
     console.error(error);
@@ -46,6 +48,8 @@ router.route('/login').post(async (req, res, next) => {
     }
 
     const score = await existingUser.getScore();
+    const events = await existingUser.getEvents();
+    const userEvents = events.length > 0 ? events.map(event => ({ id: event.id })) : [];
     const token = await jwt.sign({ id: existingUser.id }, secret);
     res.cookie('token', token, { httpOnly: true, secure: !isDev });
     return res.status(201).json({
@@ -54,6 +58,7 @@ router.route('/login').post(async (req, res, next) => {
       lastName: existingUser.lastName ? existingUser.lastName : '',
       imageUrl: existingUser.imageUrl,
       score: score ? score.value : null,
+      event: userEvents,
     });
   } catch (error) {
     console.error(error);
