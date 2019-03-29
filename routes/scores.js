@@ -1,10 +1,8 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
+const isAuthenticatedMiddleware = require('../middleware/isAuthenticated');
 const { User, Score } = require('../models');
 
 const router = express.Router();
-
-const secret = 'the-secret-key';
 
 router.route('/').get(async (req, res, next) => {
   try {
@@ -31,17 +29,13 @@ router.route('/').get(async (req, res, next) => {
   }
 });
 
+// Protected Routes below this middleware
+router.use(isAuthenticatedMiddleware);
+
 router.route('/').post(async (req, res, next) => {
   try {
-    const { token } = req.cookies;
-    if (!token) return res.status(400).json({ error: { message: 'Please login' } });
     const { score } = req.body;
-    const user = await jwt.verify(token, secret);
-    const foundUser = await User.findOne({ where: { id: user.id } });
-
-    if (!foundUser) {
-      return res.status(400).json({ error: { message: 'No such user exists' } });
-    }
+    const foundUser = req.user;
 
     const existingScore = await foundUser.getScore();
 

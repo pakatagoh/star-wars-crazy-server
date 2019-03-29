@@ -17,18 +17,8 @@ module.exports = (sequelize, SEQUELIZE) => {
           },
         },
       },
-      slug: {
-        type: SEQUELIZE.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-          notNull: {
-            msg: 'Slug must be specified',
-          },
-        },
-      },
       description: {
-        type: SEQUELIZE.STRING,
+        type: SEQUELIZE.TEXT,
         allowNull: false,
         validate: {
           notNull: {
