@@ -48,7 +48,6 @@ const createUsers = async () => {
     },
     { include: [Score, Event] }
   );
-  console.log(createdEvent);
   await User.create(
     {
       firstName: 'jerome',
