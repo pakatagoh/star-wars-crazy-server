@@ -146,4 +146,36 @@ router.route('/:id').patch(async (req, res, next) => {
   }
 });
 
+router.route('/:id').delete(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { user } = req;
+
+    const findEvent = async () =>
+      Event.findOne({
+        where: { id },
+        include: [
+          { model: User, as: 'organizer', attributes: { exclude: ['password'] } },
+          {
+            model: User,
+            as: 'attendees',
+            attributes: ['id'],
+          },
+        ],
+      });
+
+    const foundEvent = await findEvent();
+
+    if (!foundEvent) {
+      return res.status(404).json({ error: { message: 'Unable to find event, try again' } });
+    }
+    const destroyedEvent = foundEvent.destroy();
+
+    res.status(202).json(destroyedEvent);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
