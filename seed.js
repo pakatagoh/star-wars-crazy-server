@@ -106,7 +106,6 @@ const createEvents = async () => {
       organizerId: 1,
       imageUrl:
         'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
-      capacity: 3,
     },
     { include: [{ association: User.Organizer, as: 'organizer' }] }
   );

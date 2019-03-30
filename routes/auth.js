@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { User, Score, Event } = require('../models');
 
 const router = express.Router();
@@ -9,7 +10,8 @@ const secret = 'the-secret-key';
 
 router.route('/signup').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } });
+    const { email } = req.body;
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: { message: 'User already exists' } });
     }
@@ -42,9 +44,16 @@ router.route('/logout').post((req, res) => {
 
 router.route('/login').post(async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ where: { email: req.body.email } });
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ where: { email } });
     if (!existingUser) {
       return res.status(400).json({ error: { message: 'User does not exist, please signup' } });
+    }
+
+    const keyi = await bcrypt.compare(password, existingUser.password);
+
+    if (!keyi) {
+      return res.status(400).json({ error: { message: 'Your password is invalid, please try again.' } });
     }
 
     const score = await existingUser.getScore();
@@ -58,7 +67,7 @@ router.route('/login').post(async (req, res, next) => {
       lastName: existingUser.lastName ? existingUser.lastName : '',
       imageUrl: existingUser.imageUrl,
       score: score ? score.value : null,
-      event: userEvents,
+      events: userEvents,
     });
   } catch (error) {
     console.error(error);

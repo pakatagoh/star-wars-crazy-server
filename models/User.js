@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, SEQUELIZE) => {
   const User = sequelize.define(
     'user',
@@ -46,6 +48,14 @@ module.exports = (sequelize, SEQUELIZE) => {
           isUrl: {
             msg: 'Please provide a valid Url',
           },
+        },
+      },
+    },
+    {
+      hooks: {
+        beforeCreate: user => {
+          const salt = bcrypt.genSaltSync(8);
+          user.password = bcrypt.hashSync(user.password, salt);
         },
       },
     },

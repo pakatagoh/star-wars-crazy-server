@@ -70,6 +70,34 @@ router.route('/').post(async (req, res, next) => {
   }
 });
 
+router.route('/:id').put(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const foundEvent = await Event.findOne({
+      where: { id },
+      include: [
+        { model: User, as: 'organizer', attributes: { exclude: ['password'] } },
+        {
+          model: User,
+          as: 'attendees',
+          attributes: ['id'],
+        },
+      ],
+    });
+    if (!foundEvent) {
+      return res.status(404).json({ error: { message: 'Event does not exist' } });
+    }
+
+    const updatedEvent = await foundEvent.update(req.body);
+
+    console.log('THE UPDATED EVENT', updatedEvent);
+    res.status(201).json(updatedEvent);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.route('/:id').patch(async (req, res, next) => {
   try {
     const { id } = req.params;

@@ -9,6 +9,7 @@ const movies = require('./routes/movies');
 const auth = require('./routes/auth');
 const scores = require('./routes/scores');
 const events = require('./routes/events');
+const users = require('./routes/users');
 const errorMiddleware = require('./middleware/error');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -39,6 +40,7 @@ app.use('/v1/movies', movies);
 app.use('/v1/auth', auth);
 app.use('/v1/scores', scores);
 app.use('/v1/events', events);
+app.use('/v1/users', users);
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello world');

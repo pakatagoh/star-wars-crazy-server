@@ -53,15 +53,6 @@ module.exports = (sequelize, SEQUELIZE) => {
           },
         },
       },
-      capacity: {
-        type: SEQUELIZE.INTEGER,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Please enter the maximum capacity for the event',
-          },
-        },
-      },
     },
     { timestamps: true }
   );
