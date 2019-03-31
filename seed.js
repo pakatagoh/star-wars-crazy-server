@@ -87,7 +87,7 @@ const createEvents = async () => {
     firstName: 'jesstern',
     email: 'jesstern@gmail.com',
     password: 'password',
-    imageUrl: 'https://randomuser.me/api/portraits/women/51.jpg',
+    imageUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
   });
   const user2 = await User.create({
     firstName: 'angeline',
@@ -95,10 +95,30 @@ const createEvents = async () => {
     password: 'password',
     imageUrl: 'https://randomuser.me/api/portraits/women/51.jpg',
   });
-  const event1 = await Event.create(
+
+  const events = [
     {
-      name: 'Event 1 name',
-      slug: 'event-1-name',
+      name: 'Star Wars Fun Fun',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 3,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+    },
+    {
+      name: 'Chewie Chew Chew',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 2,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+    },
+    {
+      name: 'Millenium Pigeon',
       description:
         'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
       eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
@@ -107,10 +127,45 @@ const createEvents = async () => {
       imageUrl:
         'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
     },
-    { include: [{ association: User.Organizer, as: 'organizer' }] }
+    {
+      name: 'Han Together',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 1,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+    },
+    {
+      name: 'The Force is With The Event',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 1,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+    },
+    {
+      name: 'I am your Father...just today',
+      description:
+        'event 1 description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+      eventStart: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      eventEnd: 'Thu Mar 28 2019 22:03:42 GMT+0800 (Singapore Standard Time)',
+      organizerId: 1,
+      imageUrl:
+        'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+    },
+  ];
+
+  const promisedEvents = await Promise.all(
+    events.map(async event => {
+      await Event.create(event, { include: [{ association: User.Organizer, as: 'organizer' }] });
+    })
   );
 
-  await event1.setAttendees([user1.id, user2.id]);
+  await promisedEvents[0].setAttendees([user1.id, user2.id]);
   // const foundEvent = await Event.findOne({ where: { name: 'Event 1 name' }, include: [{ all: true }] });
 };
 
