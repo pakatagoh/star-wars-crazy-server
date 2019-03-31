@@ -160,9 +160,7 @@ const createEvents = async () => {
   ];
 
   const promisedEvents = await Promise.all(
-    events.map(async event => {
-      await Event.create(event, { include: [{ association: User.Organizer, as: 'organizer' }] });
-    })
+    events.map(async event => Event.create(event, { include: [{ association: User.Organizer, as: 'organizer' }] }))
   );
 
   await promisedEvents[0].setAttendees([user1.id, user2.id]);
