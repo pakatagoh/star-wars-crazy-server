@@ -29,7 +29,7 @@ const createUsers = async () => {
     password: 'password',
     imageUrl: 'https://randomuser.me/api/portraits/men/10.jpg',
   });
-  const createdEvent = await User.create(
+  await User.create(
     {
       firstName: 'timothy',
       email: 'timothy@gmail.com',
