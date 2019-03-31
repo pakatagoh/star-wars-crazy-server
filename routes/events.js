@@ -65,6 +65,9 @@ router.route('/').post(async (req, res, next) => {
     });
     res.status(201).json(createdEvent);
   } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: { message: 'Event name is already used. Please select another name' } });
+    }
     console.error(error);
     next(error);
   }
@@ -90,9 +93,11 @@ router.route('/:id').put(async (req, res, next) => {
 
     const updatedEvent = await foundEvent.update(req.body);
 
-    console.log('THE UPDATED EVENT', updatedEvent);
     res.status(201).json(updatedEvent);
   } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: { message: 'Event name is already used. Please select another name' } });
+    }
     console.error(error);
     next(error);
   }
@@ -149,7 +154,6 @@ router.route('/:id').patch(async (req, res, next) => {
 router.route('/:id').delete(async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { user } = req;
 
     const findEvent = async () =>
       Event.findOne({

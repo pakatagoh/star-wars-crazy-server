@@ -210,7 +210,7 @@ describe('unprotected Events route', () => {
   });
 });
 
-describe('Authentication for events route', () => {
+describe('Authentication tests for events route with bad credentials', () => {
   test('[POST] should receive 401 status if no token is provided ', done => {
     const route = `/v1/events`;
 
@@ -248,5 +248,170 @@ describe('Authentication for events route', () => {
       })
       .set('Origin', 'http://localhost:3000')
       .expect(401, done);
+  });
+});
+
+describe('Protected events routes', () => {
+  test('[POST] should create a new event', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events`;
+
+    request(app)
+      .post(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .send({
+        name: 'Test Event name',
+        description:
+          'Test event description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+        eventStart: '2019-03-28T14:03:42.000Z',
+        eventEnd: '2019-03-28T14:03:42.000Z',
+        organizerId: 1,
+        imageUrl:
+          'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      })
+      .set('Origin', 'http://localhost:3000')
+      .expect(201, done)
+      .expect(res => {
+        const actual = res.body;
+        expect(actual).toEqual(
+          expect.objectContaining({
+            name: 'Test Event name',
+            description:
+              'Test event description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+            eventStart: '2019-03-28T14:03:42.000Z',
+            eventEnd: '2019-03-28T14:03:42.000Z',
+            organizerId: 1,
+            imageUrl:
+              'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+          })
+        );
+      });
+  });
+
+  test('[POST] should received 500 status if creating event with non unique name', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events`;
+
+    request(app)
+      .post(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .send({
+        name: 'Star Wars Fun Fun',
+        description:
+          'Test event description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+        eventStart: '2019-03-28T14:03:42.000Z',
+        eventEnd: '2019-03-28T14:03:42.000Z',
+        organizerId: 1,
+        imageUrl:
+          'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      })
+      .set('Origin', 'http://localhost:3000')
+      .expect(400, done);
+  });
+
+  test('[PUT] should received 400 status if updated event has the same name as other existing events', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events/1`;
+
+    request(app)
+      .put(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .send({
+        name: 'Han Together',
+        description:
+          'Test event description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+        eventStart: '2019-03-28T14:03:42.000Z',
+        eventEnd: '2019-03-28T14:03:42.000Z',
+        organizerId: 1,
+        imageUrl:
+          'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      })
+      .set('Origin', 'http://localhost:3000')
+      .expect(400, done);
+  });
+
+  test('[PUT] should received 404 status if updating event that does not exist', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events/100`;
+
+    request(app)
+      .put(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .send({
+        name: 'BLAH BLAH',
+        description:
+          'Test event EDITED description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+        eventStart: '2019-03-28T14:03:42.000Z',
+        eventEnd: '2019-03-28T14:03:42.000Z',
+        organizerId: 1,
+        imageUrl:
+          'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      })
+      .set('Origin', 'http://localhost:3000')
+      .expect(404, done);
+  });
+
+  test('[PUT] should received 201 status if updated event successfully', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events/1`;
+
+    request(app)
+      .put(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .send({
+        name: 'BLAH BLAH',
+        description:
+          'Test event EDITED description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+        eventStart: '2019-03-28T14:03:42.000Z',
+        eventEnd: '2019-03-28T14:03:42.000Z',
+        organizerId: 1,
+        imageUrl:
+          'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+      })
+      .set('Origin', 'http://localhost:3000')
+      .expect(201, done)
+      .expect(res => {
+        expect(res.body).toEqual(
+          expect.objectContaining({
+            name: 'BLAH BLAH',
+            description:
+              'Test event EDITED description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem officia, voluptate molestias obcaecati laudantium libero tempore voluptatem corrupti saepe. Dicta!',
+            eventStart: '2019-03-28T14:03:42.000Z',
+            eventEnd: '2019-03-28T14:03:42.000Z',
+            organizerId: 1,
+            imageUrl:
+              'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2098&q=80',
+          })
+        );
+      });
+  });
+
+  test('[DELETE] should receive 201 status if deleted event successfully', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events/1`;
+
+    request(app)
+      .delete(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .set('Origin', 'http://localhost:3000')
+      .expect(202, done);
+  });
+
+  test('[DELETE] should receive 404 status if deleting event that does not exist', done => {
+    jwt.verify.mockResolvedValueOnce({ id: 1 });
+
+    const route = `/v1/events/100`;
+
+    request(app)
+      .delete(route)
+      .set('Cookie', 'token=aklsdjakldjas')
+      .set('Origin', 'http://localhost:3000')
+      .expect(404, done);
   });
 });
