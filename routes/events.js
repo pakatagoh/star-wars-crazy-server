@@ -60,6 +60,9 @@ router.use(isAuthenticatedMiddleware);
 router.route('/').post(async (req, res, next) => {
   try {
     const eventDetails = req.body;
+    if (!eventDetails.imageUrl) {
+      eventDetails.imageUrl = null;
+    }
     const createdEvent = await Event.create(Object.assign(eventDetails, { organizerId: req.user.id }), {
       include: [{ association: User.Organizer, as: 'organizer' }],
     });
